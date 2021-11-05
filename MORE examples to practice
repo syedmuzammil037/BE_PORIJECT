@@ -1,0 +1,184 @@
+#ALU
+
+VerilogHDL code
+
+module ALU(S0,S1,D0,D1, out);
+input S0,S1,D0,D1;
+output out;
+
+    assign W0 = ~S0 & ~S1;
+    assign W1 = S0 & ~S1;
+    assign W2 = ~S0 & S1;
+    assign W3 = S0 & S1;
+    
+    assign V0 = W0 & (D0 & D1);
+    assign V1 = W1 & (D0 || D1);
+    assign V2 = W2 & (D0 ^ D1);
+    assign V3 = W3 & !(D0 & D1);
+    
+    assign out = V0 || V1 || V2 || V3;
+    
+    endmodule
+    
+    
+TESTBENCH CODE      
+    `timescale 1ns/1ps
+module TestBench;
+    reg d0, d1, s1,s0;
+    wire out;
+    
+    ALU myALU(s0,s1,d0,d1, out);
+    
+  initial
+begin
+  $dumpfile("alu.vcd");
+ $dumpvars(1);
+end
+    
+    initial
+        begin 
+    //0
+        d0 = 0; d1 = 0; s0 = 0; s1 = 0;
+    #2  $display("d0=%b d1=%b s0=%b s1=%b out=%b", d0,d1,s0,s1,out);
+    //1
+        d0 = 0; d1 = 0; s0 = 0; s1 = 1;
+    #2  $display("d0=%b d1=%b s0=%b s1=%b out=%b", d0,d1,s0,s1,out);
+    //2
+        d0 = 0; d1 = 0; s0 = 1; s1 = 0;
+    #2  $display("d0=%b d1=%b s0=%b s1=%b out=%b", d0,d1,s0,s1,out);
+    //3
+        d0 = 0; d1 = 0; s0 = 1; s1 = 1;
+    #2  $display("d0=%b d1=%b s0=%b s1=%b out=%b", d0,d1,s0,s1,out);
+    //4
+        d0 = 0; d1 = 1; s0 = 0; s1 = 0;
+    #2  $display("d0=%b d1=%b s0=%b s1=%b out=%b", d0,d1,s0,s1,out);
+    //5
+        d0 = 0; d1 = 1; s0 = 0; s1 = 1;
+    #2  $display("d0=%b d1=%b s0=%b s1=%b out=%b", d0,d1,s0,s1,out);
+    //6
+        d0 = 0; d1 = 1; s0 = 1; s1 = 0;
+    #2  $display("d0=%b d1=%b s0=%b s1=%b out=%b", d0,d1,s0,s1,out);
+    //7
+        d0 = 0; d1 = 1; s0 = 1; s1 = 1;
+    #2  $display("d0=%b d1=%b s0=%b s1=%b out=%b", d0,d1,s0,s1,out);
+    //8
+        d0 = 1; d1 = 0; s0 = 0; s1 = 0;
+    #2  $display("d0=%b d1=%b s0=%b s1=%b out=%b", d0,d1,s0,s1,out);
+    //9
+        d0 = 1; d1 = 0; s0 = 0; s1 = 1;
+    #2  $display("d0=%b d1=%b s0=%b s1=%b out=%b", d0,d1,s0,s1,out);
+    //10
+        d0 = 1; d1 = 0; s0 = 1; s1 = 0;
+    #2  $display("d0=%b d1=%b s0=%b s1=%b out=%b", d0,d1,s0,s1,out);
+    //11
+        d0 = 1; d1 = 0; s0 = 1; s1 = 1;
+    #2  $display("d0=%b d1=%b s0=%b s1=%b out=%b", d0,d1,s0,s1,out);
+    //12
+        d0 = 1; d1 = 1; s0 = 0; s1 = 0;
+    #2  $display("d0=%b d1=%b s0=%b s1=%b out=%b", d0,d1,s0,s1,out);
+    //13
+        d0 = 1; d1 = 1; s0 = 0; s1 = 1;
+    #2  $display("d0=%b d1=%b s0=%b s1=%b out=%b", d0,d1,s0,s1,out);
+    //14
+        d0 = 1; d1 = 1; s0 = 1; s1 = 0;
+    #2  $display("d0=%b d1=%b s0=%b s1=%b out=%b", d0,d1,s0,s1,out);
+    //15
+        d0 = 1; d1 = 1; s0 = 1; s1 = 1;
+    #2  $display("d0=%b d1=%b s0=%b s1=%b out=%b", d0,d1,s0,s1,out);
+    end
+    
+    endmodule
+    
+    
+    
+    #counter
+    
+    VerilogHDL code
+    
+module upcounter(clk,rst,q); 
+input clk,rst; 
+output reg [3:0]q; 
+always@(posedge clk)
+if(rst)
+q<=0;
+else 
+q<=q+1;
+endmodule
+
+
+TESTBENCH
+
+`timescale 1ns/1ps
+module test_up;
+reg clk,rst;
+wire [3:0]q;
+upcounter up1(clk,rst,q);
+  initial
+begin
+  $dumpfile("cont.vcd");
+ $dumpvars(1);
+end
+initial
+begin
+clk=0;
+rst=0;
+#5 rst=1;
+#5 rst=0;
+end
+always
+#5 clk=~clk;
+initial #900
+$finish;
+endmodule
+
+#RIGHT SHIFT REGISTER
+
+VerilogHDL Code
+
+module rsr(clk,rst,r_in,r_out);
+input clk,rst,r_in;
+output r_out; 
+reg [3:0]q;
+always@(posedge clk) 
+begin
+if(rst)
+q<=0; 
+else
+q<={r_in,q[3:1]}; 
+end
+assign r_out=q[0]; 
+endmodule
+
+
+TESTBENCH
+
+`timescale 1ns/1ps
+module test_rsr; 
+reg clk,rst,r_in; 
+wire r_out;
+rsr rsr1(clk,rst,l_in,l_out);
+  initial
+begin
+  $dumpfile("rsr.vcd");
+ $dumpvars(1);
+end 
+/* instantiate rsr, and the instantiation name is rsr1 */ 
+initial
+begin rst=0; clk=0; #5
+rst=1; #5
+rst=0; 
+end 
+always
+#5
+clk=~clk;
+ initial 
+ begin
+#25
+r_in=1; #10
+r_in=0; #10
+r_in=1; #10
+r_in=0; 
+end 
+initial #900
+$finish;
+endmodule
