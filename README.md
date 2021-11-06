@@ -26,9 +26,9 @@ write the verilog code in that folder
 
 STEP-4 Creat a TestBench file for the written verilog module. the main key point to take care while writing testbench is as followes
 
-1.include "$dumpfile"
+1.include "$dumpfile"  //this instruction is used to dump .vcd file (vcd="value change dump") this has the info about waveform
 
-2.include "$monitor"
+2.include "$monitor"   //this is for the monitoring the inputs, wires and outputs
 
 ![5](https://user-images.githubusercontent.com/84916459/140509871-8d27dc8e-cabb-47b8-be21-fcbb346e298a.png)
 
@@ -40,13 +40,13 @@ STEP-5 Now open a new terminal as shown and In terminal type the following comma
 
 COMMANDS
 
-1.iverilog modulename testbenchname (in my case => iverilog .\mux2x1.v .\tb_mux2x1.v) then press enter.
+1.iverilog modulename testbenchname (in my case => iverilog .\mux2x1.v .\tb_mux2x1.v) then press enter.  //to compile the module code and testbench code
 
 ![8](https://user-images.githubusercontent.com/84916459/140509961-2b7a47a7-1de9-4afe-995e-a53781446b73.png)
 
 STEP-6
 
-2.vvp a.out
+2.vvp ./a.out   //used to creat output file
 
 ![9](https://user-images.githubusercontent.com/84916459/140510003-6a29b7fa-88b8-4e18-9619-e6fb1a96bf32.png)
 
@@ -86,7 +86,7 @@ In terminal Type yosys to open yosys tool
 
 STEP-2
 
-then follow the next command Type: read_liberty -lib sky130_fd_sc_hd__tt_025C_1v80.lib
+then follow the next command Type: read_liberty -lib sky130_fd_sc_hd__tt_025C_1v80.lib  //to read liberty files to import total number of cells present for usage
 
 ![20](https://user-images.githubusercontent.com/84916459/140510519-b11ac485-f83b-4cd7-ac47-03452cf3a92f.png)
 
@@ -104,26 +104,26 @@ after that use syntax for synthesys process : synth -top modulename // modulenam
 
 STEP-5
 
-For mapping flip-flops to library use following command : dfflibmap -liberty sky130_fd_sc_hd__tt_025C_1v80.lib
+For mapping flip-flops to library use following command : dfflibmap -liberty sky130_fd_sc_hd__tt_025C_1v80.lib  //maping the flipflops in liberty file 
 
 ![23](https://user-images.githubusercontent.com/84916459/140510586-8650d19e-79e8-4153-aabb-8e2f10f707f3.png)
 
 STEP-6
 
-For mapping logic to library file use following command : abc -liberty sky130_fd_sc_hd__tt_025C_1v80.lib
+For mapping logic to library file use following command : abc -liberty sky130_fd_sc_hd__tt_025C_1v80.lib   //maping the standerd cells with a,b,c
 
 ![24](https://user-images.githubusercontent.com/84916459/140510609-c073332a-9aaa-4bc2-9748-45ac8f2e844e.png)
 
 STEP-7
 
-for downloading netlist file type : show
+for downloading netlist file type : show  //creat a file to give as idea of design and conections
 
 ![25](https://user-images.githubusercontent.com/84916459/140510650-f33e0c62-f8cc-4f5c-a63b-e4d467750188.png)
 ![26](https://user-images.githubusercontent.com/84916459/140510700-15e5a171-ce77-4cbb-ae35-ae86f5bfa9bb.png)
 
 STEP-8
 
-now use following command : tee -o report.txt stat -liberty sky130_fd_sc_hd__tt_025C_1v80.lib
+now use following command : tee -o report.txt stat -liberty sky130_fd_sc_hd__tt_025C_1v80.lib  //gives as the report of total no of ceels and chip size in nano meters
 
 ![27](https://user-images.githubusercontent.com/84916459/140510726-269ea10f-4a05-40fc-82f7-5c856f2cf413.png)
 
